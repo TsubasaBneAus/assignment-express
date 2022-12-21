@@ -1,0 +1,1138 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Volcanoes around the world v2",
+        "description": "This API has been created to support assignment two in CAB230, Web Computing. It exposes a number of REST endpoints which implement CRUD operations on a database containing publicly available data about volcanoes collated by the Smithsonian Institution's Global Volcanism Program. The API endpoints and their usage are described in detail below.",
+        "version": "1.0.0",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "apiteam@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3001"
+        }
+    ],
+    "basePath": "/v2",
+    "tags": [
+        {
+            "name": "Data"
+        },
+        {
+            "name": "Authentication"
+        },
+        {
+            "name": "Profile"
+        },
+        {
+            "name": "Administration"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "description": "Enter JWT Bearer token only"
+            }
+        },
+        "populatedWithin": {
+            "type": "string",
+            "enum": [
+                "5km",
+                "10km",
+                "30km",
+                "100km"
+            ]
+        },
+        "responses": {
+            "volcanoesError1": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Country is a required query parameter."
+                    }
+                }
+            },
+            "volcanoesError2": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid populatedWithin query."
+                    }
+                }
+            },
+            "volcanoesError3": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "No query parameters."
+                    }
+                }
+            },
+            "volcanoError1": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Authorization header is malformed"
+                    }
+                }
+            },
+            "volcanoError2": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "JWT token has expired"
+                    }
+                }
+            },
+            "volcanoError3": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid JWT token"
+                    }
+                }
+            },
+            "loginError1": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "User not registered"
+                    }
+                }
+            },
+            "loginError2": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Incorrect password"
+                    }
+                }
+            },
+            "getProfileError1": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Missing or malformed JWT"
+                    }
+                }
+            },
+            "getProfileError2": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "JWT token has expired"
+                    }
+                }
+            },
+            "getProfileError3": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid JWT"
+                    }
+                }
+            },
+            "putProfileError1": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Request body incomplete: firstName, lastName, dob and address are required."
+                    }
+                }
+            },
+            "putProfileError2": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Request body invalid: firstName, lastName and address must be strings only."
+                    }
+                }
+            },
+            "putProfileError3": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid input: dob must be a real date in format YYYY-MM-DD."
+                    }
+                }
+            },
+            "putProfileError4": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid input: dob must be a date in the past."
+                    }
+                }
+            },
+            "putProfileError5": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Unauthenticated user"
+                    }
+                }
+            },
+            "putProfileError6": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Missing or malformed JWT"
+                    }
+                }
+            },
+            "putProfileError7": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Forbidden"
+                    }
+                }
+            },
+            "putProfileError8": {
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Invalid JWT"
+                    }
+                }
+            }
+        }
+    },
+    "paths": {
+        "/countries": {
+            "get": {
+                "tags": [
+                    "Data"
+                ],
+                "summary": "",
+                "description": "Returns a list of all countries that are associated with one or more volcanoes, ordered alphabetically.",
+                "operationId": "countries",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of countries. An example of the first five elements in the array is shown below.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "example": [
+                                        "Algeria",
+                                        "Antarctica",
+                                        "Argentina",
+                                        "Armenia",
+                                        "Australia"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid query parameters.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid query parameters. Query parameters are not permitted."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/volcanoes": {
+            "get": {
+                "tags": [
+                    "Data"
+                ],
+                "summary": "",
+                "description": "Returns a list of volcanoes that are associated with the queried country. The country query parameter is required. The list can optionally be filtered by using the populatedWithin query parameter. This will return a filtered list of volcanoes that have at least one person living within the provided radius.",
+                "operationId": "volcanoes",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "description": "Name of country",
+                        "required": true
+                    },
+                    {
+                        "name": "populatedWithin",
+                        "in": "query",
+                        "description": "Distance within X km of a volcano",
+                        "required": false,
+                        "schema": {
+                            "nullable": true,
+                            "$ref": "#/components/populatedWithin"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of objects containing id, name, country, region and subregion properties. An example of one object in the array is shown below.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Abu"
+                                            },
+                                            "country": {
+                                                "type": "string",
+                                                "example": "Japan"
+                                            },
+                                            "region": {
+                                                "type": "string",
+                                                "example": "Japan, Taiwan, Marianas"
+                                            },
+                                            "subregion": {
+                                                "type": "string",
+                                                "example": "Honshu"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Missing country query parameter or query parameters invalid. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/volcanoesError1"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/volcanoesError2"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/volcanoesError3"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/volcano/{id}": {
+            "get": {
+                "tags": [
+                    "Data"
+                ],
+                "summary": "",
+                "description": "Returns an object containing data for the queried volcano. If a valid JWT token is sent in the header of the request, population data for 5km, 10km, 30km and 100km is also provided. To test this using Swagger, click the green 'Authorize' button at the top of this page to enter your JWT token. A JWT token can be obtained by logging in. The path parameter (id) is required.",
+                "operationId": "volcano",
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "The ID of the volcano",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns an object containing id, name, country, region, subregion, last eruption, summit, elevation, latitude and longitude data for the queried volcano. If a valid JWT token is sent in the header of the request, population data for 5km, 10km, 30km and 100km is also provided. An example of one object (with an authenticated request) is shown below.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Abu"
+                                        },
+                                        "country": {
+                                            "type": "string",
+                                            "example": "Japan"
+                                        },
+                                        "region": {
+                                            "type": "string",
+                                            "example": "Japan, Taiwan, Marianas"
+                                        },
+                                        "subregion": {
+                                            "type": "string",
+                                            "example": "Honshu"
+                                        },
+                                        "last_eruption": {
+                                            "type": "string",
+                                            "example": "6850 BCE"
+                                        },
+                                        "summit": {
+                                            "type": "integer",
+                                            "example": "641"
+                                        },
+                                        "elevation": {
+                                            "type": "integer",
+                                            "example": "2103"
+                                        },
+                                        "latitude": {
+                                            "type": "string",
+                                            "example": "34.5000"
+                                        },
+                                        "longitude": {
+                                            "type": "string",
+                                            "example": "131.6000"
+                                        },
+                                        "population_5km": {
+                                            "type": "integer",
+                                            "example": "3597"
+                                        },
+                                        "population_10km": {
+                                            "type": "integer",
+                                            "example": "9594"
+                                        },
+                                        "population_30km": {
+                                            "type": "integer",
+                                            "example": "117805"
+                                        },
+                                        "population_100km": {
+                                            "type": "integer",
+                                            "example": "4071152"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid parameters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid query parameters. Query parameters are not permitted."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/volcanoError1"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/volcanoError2"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/volcanoError3"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Volcano ID not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Volcano with ID: 99999 not found."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "",
+                "description": "Creates a new user account. A request body containing the user to be registered must be sent.",
+                "operationId": "register",
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "mike@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "User successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Request body incomplete, both email and password are required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User already exists"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error in MySQL query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error in MySQL query"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "",
+                "description": "Log in to an existing user account. A request body containing the user credentials must be sent.",
+                "operationId": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "mike@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "password"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Log in successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "ajsonwebtoken"
+                                        },
+                                        "token_type": {
+                                            "type": "string",
+                                            "example": "Bearer"
+                                        },
+                                        "expires_in": {
+                                            "type": "integer",
+                                            "example": "86400"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid log in request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Request body incomplete, both email and password are required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Log in failed. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/loginError1"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/loginError2"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "500": {
+                    "description": "Error in MySQL query",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "error": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "message": {
+                                        "type": "string",
+                                        "example": "Error in MySQL query"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{email}/profile": {
+            "get": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "",
+                "description": "Returns an object containing a user's profile information. The path parameter (email) is required and must be an email that has been registered. This route returns additional information if the user is authenticated. To be authenticated, a valid JWT token must be sent in the header of the request. To test this using Swagger, click the green 'Authorize' button at the top of this page to enter your JWT token. A JWT token can be obtained by logging in.",
+                "operationId": "profile1",
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email address of a registered user",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An object containing email, firstName, lastName, address (authenticated only) and dob (authenticated only) properties. An example object for an authenticated request is shown below. If no profile information has been entered for the user via the profile PUT request route, all returned values except email are expected to be null. Click on 'Schema' below to see a response example for an unauthenticated request.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "mike@gmail.com"
+                                        },
+                                        "firstName": {
+                                            "type": "string",
+                                            "example": "Michael"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "example": "Jordan"
+                                        },
+                                        "dob": {
+                                            "type": "string",
+                                            "example": "1963-02-17"
+                                        },
+                                        "address": {
+                                            "type": "string",
+                                            "example": "23 Fake Street, Springfield"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/getProfileError1"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/getProfileError2"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/getProfileError3"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "User not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Profile"
+                ],
+                "summary": "",
+                "description": "Updates a user's profile information. The path parameter (email) is required and must be an email that has been registered. A request body containing the user's profile information must be sent. This route returns an object containing the user's updated profile information. This route also requires the user to be authenticated - a valid JWT token must be sent in the header of the request. To test this route using Swagger, click the green 'Authorize' button at the top of this page to enter your JWT token. A JWT token can be obtained by logging in.",
+                "operationId": "profile2",
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "path",
+                        "description": "Email address of a registered user",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "Michael"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Jordan"
+                                    },
+                                    "dob": {
+                                        "type": "string",
+                                        "example": "1963-02-17"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Fake Street, Springfield"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "An object containing the user's updated profile information. The object should contain email, firstName, lastName, dob and address properties. An example object is shown below.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "email": {
+                                            "type": "string",
+                                            "example": "mike@gmail.com"
+                                        },
+                                        "firstName": {
+                                            "type": "string",
+                                            "example": "Michael"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "example": "Jordan"
+                                        },
+                                        "dob": {
+                                            "type": "string",
+                                            "example": "1963-02-17"
+                                        },
+                                        "address": {
+                                            "type": "string",
+                                            "example": "23 Fake Street, Springfield"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/putProfileError1"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError2"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError3"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError4"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. Click on 'Schema' below to see the possible error responses.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "$ref": "#/components/responses/putProfileError5"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError6"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError7"
+                                        },
+                                        {
+                                            "$ref": "#/components/responses/putProfileError8"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden. Email address associated with JWT token is not the same as email provided in path parameter.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Forbidden"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error in MySQL query",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Error in MySQL query"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "",
+                "description": "A route to assist in automating some of the marking process for this assignment.",
+                "operationId": "me",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An object containing your name and student number.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Tsubasa Endo"
+                                        },
+                                        "student_number": {
+                                            "type": "string",
+                                            "example": "n10724681"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
