@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const secretKey = "secret key";
+const secretKey = "**********";
 
 router.get("/", (req, res, next) => {
     res.render("index", { title: "Swagger UI" });

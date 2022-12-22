@@ -173,3 +173,6 @@ About
 
 # knexfile
 knexfile copy.js
+
+index copy.js
+user copy.js

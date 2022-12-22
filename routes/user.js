@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const secretKey = "secret key";
+const secretKey = "**********";
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
